@@ -11,20 +11,23 @@ public class Client {
             InputStream inputStream = socket.getInputStream();
             Scanner scanner = new Scanner(System.in);
             String line;
-            byte[] response;
+            byte[] request;
 
             while (true) {
+                request = new byte[1024];
+
                 line = scanner.nextLine();
                 if (line.equals("")){
                     break;
                 }
+
                 outputStream.write(line.getBytes("UTF-8"));
                 outputStream.flush();
-                System.out.println("Отправленно: " + "\"" + line + "\"");
-                response = new byte[1024];
-                for( int ln; (ln = inputStream.read(response)) != -1;){
-                    String str = new String(response, 0, ln);
-                    System.out.println("Пришло: " + str);
+                System.out.println("Отправлено: " + line);
+
+                for( int ln; (ln = inputStream.read(request)) != -1;){
+                    String respond = new String(request, 0, ln);
+                    System.out.println("Пришло: " + respond);
                     break;
                 }
             }

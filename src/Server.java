@@ -16,17 +16,24 @@ public class Server {
         }
     }
 
-    private static void serverClient(Socket socket) throws IOException {
-        System.out.println("Обслуживаемый клиент: " + socket.getInetAddress());
+    private static void serverClient(Socket socket) throws IOException{
         InputStream inputStream = socket.getInputStream();
         OutputStream outputStream = socket.getOutputStream();
-        byte[] mass = new  byte[1024];
-        for( int len; (len = inputStream.read(mass)) != -1;){
-            String str = new String(mass, 0, len);
-            outputStream.write(mass, 0, len);
-            outputStream.flush();
-            System.out.println("Отправленно: " + str);
-            break;
+
+        System.out.println("Обслуживаемый клиент: " + socket.getInetAddress());
+
+        while (true) {
+            byte[] respond = new byte[1024];
+            for (int len; (len = inputStream.read(respond)) != -1; ) {
+                String request = new String(respond, 0, len);
+                System.out.println("Пришло: " + request);
+
+                outputStream.write(respond, 0, len);
+                outputStream.flush();
+
+                System.out.println("Отправлено: " + request);
+                break;
+            }
         }
     }
 }
